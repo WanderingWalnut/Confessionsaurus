@@ -24,8 +24,8 @@ A full-stack web app to automate anonymous student confessions for the Universit
 └── src/
     ├── components/
     ├── pages/
-    ├── services/api.js
-    └── App.jsx, main.jsx
+    ├── services/api.ts
+    └── App.tsx, main.tsx
 
 /backend # Flask app
 ├── app.py
