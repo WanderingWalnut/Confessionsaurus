@@ -1,10 +1,17 @@
 from fastapi import FastAPI
+
+# It's like saying "get the router from the api folder and call it api_router"
+from .api import router as api_router
+
 from .models.confession import Base
 from .db.session import engine
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# Include the main API router with prefix, It's like saying "use this router, and put all its routes under /api"
+app.include_router(api_router, prefix="/api")
 
 @app.get("/health")
 def health_check():
