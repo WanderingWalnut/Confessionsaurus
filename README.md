@@ -1,13 +1,13 @@
 # UCalgaryConfessionsaurus 🚀
 
-A full-stack web app to automate anonymous student confessions for the University of Calgary. Built with Flask, React, and AWS.
+A full-stack web app to automate anonymous student confessions for the University of Calgary. Built with FastAPI, React, and AWS.
 
 ---
 
 ## 🛠️ Tech Stack
 
 - **Frontend:** React (Vite), Tailwind/MUI
-- **Backend:** Flask (REST API), SQLAlchemy, Flask-Admin
+- **Backend:** FastAPI (REST API), SQLAlchemy
 - **Database:** PostgreSQL (RDS)
 - **Moderation:** better_profanity → Perspective API (planned)
 - **Hosting:**
@@ -24,20 +24,34 @@ A full-stack web app to automate anonymous student confessions for the Universit
 └── src/
     ├── components/
     ├── pages/
-    ├── services/api.ts
-    └── App.tsx, main.tsx
+    ├── services/api.js
+    └── App.jsx, main.jsx
 
-/backend # Flask app
-├── app.py
-├── confessions/
-│   ├── models.py
-│   ├── routes.py
-│   ├── moderation.py
-├── admin/ # Flask-Admin setup
-└── config.py
-
-/.ebextensions # Elastic Beanstalk config
-.env # Environment variables (not committed)
+/backend # FastAPI app
+├── app/
+│   ├── main.py              # Entry point: creates FastAPI app
+│   ├── api/                 # All route definitions
+│   │   ├── __init__.py
+│   │   ├── confess.py       # Routes like POST /confess, GET /confessions
+│   │   └── admin.py         # Admin moderation routes (approve/reject)
+│   ├── models/              # SQLAlchemy models (DB schema)
+│   │   ├── __init__.py
+│   │   └── confession.py
+│   ├── schemas/             # Pydantic models (request/response shapes)
+│   │   ├── __init__.py
+│   │   └── confession.py
+│   ├── services/            # Business logic (moderation, etc.)
+│   │   ├── __init__.py
+│   │   └── moderation.py
+│   ├── db/                  # DB connection + session setup
+│   │   ├── __init__.py
+│   │   └── session.py
+│   ├── config.py            # App settings, env vars
+│   └── utils/               # Helper functions
+│       └── profanity_filter.py
+├── requirements.txt         # Python deps
+├── .env                     # Environment variables (not committed)
+└── alembic/                 # DB migrations (if using Alembic)
 ```
 
 ---
@@ -65,5 +79,5 @@ cd backend
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-flask run
+uvicorn app.main:app --reload
 ```
