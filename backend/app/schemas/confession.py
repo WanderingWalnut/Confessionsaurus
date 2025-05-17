@@ -1,7 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class ConfessionBase(BaseModel):
-    content: str
+    # Len of confession, min and max
+    content: str = Field(..., min_length=1, max_length=1000)
 
 class ConfessionCreate(ConfessionBase):
     pass
