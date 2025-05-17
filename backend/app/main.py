@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from app.models.confession import Base
-from app.db.session import engine
+from .models.confession import Base
+from .db.session import engine
 
 Base.metadata.create_all(bind=engine)
 

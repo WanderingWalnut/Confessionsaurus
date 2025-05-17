@@ -1,5 +1,5 @@
 # Placeholder for SQLAlchemy confession model
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -9,4 +9,6 @@ class Confession(Base):
     id = Column(Integer, primary_key=True, index=True)
     content = Column(String, nullable=False)
     category = Column(String, nullable=True)
-    is_anonymous = Column(Integer, default=1) 
+    is_anonymous = Column(Boolean, default=True)
+    published = Column(Boolean, server_default='FALSE')
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
