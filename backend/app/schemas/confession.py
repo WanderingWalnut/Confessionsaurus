@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from ..models.confession import ConfessionStatus
 
 class ConfessionBase(BaseModel):
     # Len of confession, min and max
@@ -9,6 +10,9 @@ class ConfessionCreate(ConfessionBase):
 
 class ConfessionOut(ConfessionBase):
     id: int
+    status: ConfessionStatus
+    published: bool
+    created_at: str
 
     class Config:
         orm_mode = True 
