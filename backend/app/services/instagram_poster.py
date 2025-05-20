@@ -40,6 +40,8 @@ def test_instagram_connection():
         print(f"Unexpected error: {str(e)}")
         return None
 
+
+
 if __name__ == "__main__":
     test_instagram_connection()
 
