@@ -1,14 +1,18 @@
-from google import genai
 import os
-from google import genai
-import os
+import google.generativeai as genai
+from google.generativeai import types
 from typing import Optional
 from ..models.gemini import ModerationResponse
+from dotenv import load_dotenv
 import json
 
+
+# Load env varibles 
+load_dotenv()
+
 # Initialize Gemini client
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-pro")
+client = genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
 
 def moderate_confession(content: str) -> ModerationResponse:
     """
@@ -36,11 +40,11 @@ def moderate_confession(content: str) -> ModerationResponse:
         
         Confession: {content}
         
-        Review the confession and return a JSON object with the following structure:
-        {{
-            "flagged": true/false,
-            "reason": "short reason for flagging or null"
-        }}
+        Review the confession and return ONLY a valid JSON object.
+
+        ❌ Do NOT include any extra text, explanation, or formatting.
+        ❌ Do NOT wrap the response in triple backticks or use markdown.
+        ✅ Your entire response should be a single line of raw JSON, like:
         
         Example responses:
         {{"flagged": false, "reason": null}}
@@ -49,12 +53,26 @@ def moderate_confession(content: str) -> ModerationResponse:
         
         # Get response from Gemini
         response = model.generate_content(prompt)
-        result = json.loads(response.text)
+        print("Raw response text: ", response.text)
+        parsed_json = json.loads(response.text)
 
-        print(f"Moderation Successful! Here is the response: {result["flagged"]} and {result["reason"]}")
+        result = ModerationResponse(**parsed_json)
+        print("Result: ", result)
+
+        print(f"Moderation Successful!")
+
+        return result
 
     except Exception as e:
         return ModerationResponse(
             flagged=True,  # Be conservative - flag on error
             reason=f"Moderation error: {str(e)}"
         )
+
+if __name__ == "__main__":
+    confession = "I WANNA Kill Myself 😭"
+    
+    result = moderate_confession(confession)
+    print(f"Moderation Result:")
+    print(f"Flagged: {result.flagged}")
+    print(f"Reason: {result.reason}")
