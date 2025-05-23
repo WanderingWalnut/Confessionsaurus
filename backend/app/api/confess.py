@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from ..models import confession as models
 from ..schemas import confession as schemas
 from ..db.session import get_db
@@ -44,5 +45,42 @@ def submit_confession(confession: schemas.ConfessionBase, db: Session = Depends(
         )
 
 @router.get("/confessions")
-def list_confessions():
-    return [] 
+def get_confession(db: Session = Depends(get_db)):
+    try:
+        confession = db.query(models.Confession).filter(models.Confession.published == False).first()
+        
+        if not confession:
+            raise HTTPException(
+                status_code=404,
+                detail="No unpublished confessions available"
+            )
+
+        # Mark as published instead of deleting
+        confession.published = True
+        db.commit()
+        
+        return {
+            "status": "success",
+            "message": "Confession retrieved and marked as published",
+            "data": {
+                "id": confession.id,
+                "content": confession.content,
+                "published": confession.published,
+                "created_at": confession.created_at
+            }
+        }
+    
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Database error occurred: {str(e)}"
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"An unexpected error occurred: {str(e)}"
+        )
+
+    
