@@ -10,7 +10,13 @@ import json
 from datetime import datetime, timedelta
 
 class InstagramSessionManager:
+
+
+
+
     def __init__(self):
+        # Load environment variables
+        load_dotenv()
         self.client = Client()
         self.session_file = Path(__file__).parent.parent / "data" / "instagram_session.json" # Created under app folder
         self.session_file.parent.mkdir(exist_ok=True) # Makes sure data folder exists and prevents error if it alr exists
@@ -57,60 +63,62 @@ class InstagramSessionManager:
             print(f'An error has occurred {str(e)}')
             return False
 
-def ensure_login(self):
-    """ Load session from file if it exists"""
+    def ensure_login(self):
+        """ Load session from file if it exists"""
 
-    if self._load_session():
-        try:
-            self.client.get_timeline_feed()
-            return True
+        if self._load_session():
+            try:
+                self.client.get_timeline_feed()
+                return True
         
-        except LoginRequired:
-            print('Login is required, will try logging in now')
-            pass
+            except LoginRequired:
+                print('Login is required, will try logging in now')
+                pass
     
-    """ Login if session from file does not exist/not valid """
-    try:
-        # Load credentials
-        username = os.getenv("INSTAGRAM_USERNAME")
-        password = os.getenv("INSTAGRAM_PASSWORD")
+        """ Login if session from file does not exist/not valid """
+        try:
+            # Load credentials
+            username = os.getenv("INSTAGRAM_USERNAME")
+            password = os.getenv("INSTAGRAM_PASSWORD")
 
-        # Login
-        self.client.login(username, password)
+            # Login
+            try:
+                self.client.login(username, password)
+                print("Attempting Login...")
+            except Exception as e:
+                raise Exception(f'Instagram login failed: {e}')
 
-        # Save session data
-        self.session_file = self._save_session()
-        self.last_login = datetime.now()
-        return True
+            # Save session data
+            self.session_file = self._save_session()
+            self.last_login = datetime.now()
+            return True
     
-    except Exception as e:
-        print(f'Failed to login to Instagram {str(e)}')
-        return False
+        except Exception as e:
+            print(f'Failed to login to Instagram {str(e)}')
+            return False
 
-def post_photo(self, image_path: Path, caption: str):
-    """ Post a photo to instagram """
-    # Make sure we are logged in
-    if not self.ensure.login():
-        raise Exception(f'Failed to maintain instagram session {str(Exception)}')
+    def post_photo(self, image_path: Path, caption: str):
+        """ Post a photo to instagram """
+        # Make sure we are logged in
+        if not self.ensure_login():
+            raise Exception(f'Failed to maintain instagram session {str(Exception)}')
     
-    # If image does not exist or invalid path
-    if not image_path.exists():
-        raise FileNotFoundError(f"Image file not does not exist {str(image_path)}")
+        # If image does not exist or invalid path
+        if not image_path.exists():
+            raise FileNotFoundError(f"Image file not does not exist {str(image_path)}")
 
-    # If we are logged in, upload post
-    return self.client.photo_upload(
-        str(image_path), # Has to be str for instagrapi
-        caption,
-        location=Location(name="Canada, Calgary", lat=51.05, lng=114.07)
-        )
+        # If we are logged in, upload post
+        return self.client.photo_upload(
+            str(image_path), # Has to be str for instagrapi
+            caption,
+            location=Location(name="Canada, Calgary", lat=51.05, lng=114.07)
+            )
 
 
 
 
     
 
-# Load environment variables
-load_dotenv()
 
 def test_instagram_connection():
     try:
