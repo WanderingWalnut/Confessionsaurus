@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.schemas import instagram as schemas
 from app.services.instagram_poster import InstagramSessionManager
-from pathlib import Path
 
 router = APIRouter()
 session = InstagramSessionManager()
@@ -11,7 +10,7 @@ async def post_to_instagram(request: schemas.InstagramPostRequest):
     """ Posts pic & caption onto instagram """
     # Post photo
     try:
-        result = session.post_photo(Path(request.image_path), request.caption)
+        result = session.post_photo(request.image_path, request.caption)
         return {"status": "success", "post_id": result.id}
     
     except Exception as e:

@@ -25,7 +25,7 @@ def submit_confession(confession: schemas.ConfessionBase, db: Session = Depends(
         db.refresh(db_confession)
 
         return{
-            "Status": "Sucess",
+            "Status": "Success",
             "Message": "Confession created successfully",
             "data": {
                 "id": db_confession.id,
