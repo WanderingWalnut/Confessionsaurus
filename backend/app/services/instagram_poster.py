@@ -106,6 +106,48 @@ class InstagramSessionManager:
         except Exception as e:
             print(f'Failed to login to Instagram {str(e)}')
             return False
+    
+    def create_caption(self, confessions: list[str]):
+        """ Creates a caption thru gemini based on content of confessions """
+
+        formatted_confession = []
+
+        # Format confessions to give Gemini more context on what each confession is about and which slide
+        for i in range(len(confessions)):
+            formatted_confession.append(f"Slide {i+1}: {confessions[i]}")
+        
+        confession_content = '\n'.join(formatted_confession)
+        
+        
+        prompt = """"You are an Instagram social media manager for a university confessions page.
+
+        Your goal is to generate a fun, engaging, and highly relatable caption based on the set of confessions being posted in a carousel. 
+
+        Guidelines:
+        - Write in a casual, energetic, and meme-like tone.
+        - Use phrases like “HELL NOOOO”, “what y’all think?”, “this one is wild fr 😭”, “give advice in the comments‼️” to make the caption feel like it’s talking to friends.
+        - Make the audience *want* to engage — ask for their thoughts, advice, or reactions.
+        - If possible, tease the confessions across slides. (e.g., “Slide 1: vulnerability sucks 🤡 Slide 2: the tea is hot 🍵”)
+        - Keep it short and punchy, avoid long paragraphs.
+        - Emojis are encouraged but don’t overdo them (1-2 per line max).
+        - End with a direct engagement hook — e.g., “drop your advice 👇” or “who’s guilty of this? 😭”
+
+        Important:
+        - Do NOT explain the confessions — just tease or hint.
+        - Do NOT use hashtags or tag anyone.
+        - Write the response as a **single raw text caption** only — no extra explanation or formatting.
+
+        Example captions:
+        - “HELLLL NOOOO 😭 but what y’all think?? Slide 3 got me crying fr 😭”
+        - “vulnerability = pain 🤡 slide 2 is even worse lmao. Advice?? 👇”
+        - “no cuz slide 3 is just criminal behavior 💀 y’all ever seen worse???”
+
+        Confessions:
+        {confession_content}
+        """
+
+        response = model.generate_content(prompt)
+
 
     def post_photo(self, image_path: str, caption: str):
         """ Post a photo to instagram """
