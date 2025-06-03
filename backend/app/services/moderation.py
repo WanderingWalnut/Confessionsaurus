@@ -1,18 +1,9 @@
 import os
-import google.generativeai as genai
-from google.generativeai import types
 from typing import Optional
 from ..models.gemini import ModerationResponse
 from dotenv import load_dotenv
 import json
-
-
-# Load env varibles 
-load_dotenv()
-
-# Initialize Gemini client
-client = genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
+from app.services.gemini_client import model
 
 def moderate_confession(content: str) -> ModerationResponse:
     """

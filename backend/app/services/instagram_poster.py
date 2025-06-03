@@ -8,6 +8,7 @@ from instagrapi.exceptions import LoginRequired, ClientError
 from pathlib import Path
 import json
 from datetime import datetime, timedelta
+from app.services.gemini_client import model
 
 class InstagramSessionManager:
 
@@ -165,5 +166,10 @@ class InstagramSessionManager:
             caption,
             location=Location(name="Canada, Calgary", lat=51.05, lng=114.07)
             )
+
+    def generate_confessions(self):
+        """ Function used to create 5 new confessions for testing"""
+
+        prompt = " Generate 5 confessions that are human like"
 
 
