@@ -9,6 +9,8 @@ from pathlib import Path
 import json
 from datetime import datetime, timedelta
 from app.services.gemini_client import model
+from app.db.session import SessionLocal
+from app.db.crud_confession import create_confession
 
 class InstagramSessionManager:
 
@@ -126,12 +128,12 @@ class InstagramSessionManager:
 
         Guidelines:
         - Write in a casual, energetic, and meme-like tone.
-        - Use phrases like “HELL NOOOO”, “what y’all think?”, “this one is wild fr 😭”, “give advice in the comments‼️” to make the caption feel like it’s talking to friends.
+        - Use phrases like "HELL NOOOO", "what y'all think?", "this one is wild fr 😭", "give advice in the comments‼️" to make the caption feel like it's talking to friends.
         - Make the audience *want* to engage — ask for their thoughts, advice, or reactions.
-        - If possible, tease the confessions across slides. (e.g., “Slide 1: vulnerability sucks 🤡 Slide 2: the tea is hot 🍵”)
+        - If possible, tease the confessions across slides. (e.g., "Slide 1: vulnerability sucks 🤡 Slide 2: the tea is hot 🍵")
         - Keep it short and punchy, avoid long paragraphs.
-        - Emojis are encouraged but don’t overdo them (1-2 per line max).
-        - End with a direct engagement hook — e.g., “drop your advice 👇” or “who’s guilty of this? 😭”
+        - Emojis are encouraged but don't overdo them (1-2 per line max).
+        - End with a direct engagement hook — e.g., "drop your advice 👇" or "who's guilty of this? 😭"
 
         Important:
         - Do NOT explain the confessions — just tease or hint.
@@ -139,9 +141,9 @@ class InstagramSessionManager:
         - Write the response as a **single raw text caption** only — no extra explanation or formatting.
 
         Example captions:
-        - “HELLLL NOOOO 😭 but what y’all think?? Slide 3 got me crying fr 😭”
-        - “vulnerability = pain 🤡 slide 2 is even worse lmao. Advice?? 👇”
-        - “no cuz slide 3 is just criminal behavior 💀 y’all ever seen worse???”
+        - "HELLLL NOOOO 😭 but what y'all think?? Slide 3 got me crying fr 😭"
+        - "vulnerability = pain 🤡 slide 2 is even worse lmao. Advice?? 👇"
+        - "no cuz slide 3 is just criminal behavior 💀 y'all ever seen worse???
 
         Confessions:
         {confession_content}
@@ -167,9 +169,7 @@ class InstagramSessionManager:
             location=Location(name="Canada, Calgary", lat=51.05, lng=114.07)
             )
 
-    def generate_confessions(self):
-        """ Function used to create 5 new confessions for testing"""
 
-        prompt = " Generate 5 confessions that are human like"
+
 
 
