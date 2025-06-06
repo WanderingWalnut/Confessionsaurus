@@ -44,43 +44,43 @@ def submit_confession(confession: schemas.ConfessionBase, db: Session = Depends(
             detail=f"An error occured while creating the confession: {str(e)}"
         )
 
-@router.get("/confessions")
-def get_confession(db: Session = Depends(get_db)):
-    try:
-        confession = db.query(models.Confession).filter(models.Confession.published == False).first()
+# @router.get("/confessions")
+# def get_confession(db: Session = Depends(get_db)):
+#     try:
+#         confession = db.query(models.Confession).filter(models.Confession.published == False).first()
         
-        if not confession:
-            raise HTTPException(
-                status_code=404,
-                detail="No unpublished confessions available"
-            )
+#         if not confession:
+#             raise HTTPException(
+#                 status_code=404,
+#                 detail="No unpublished confessions available"
+#             )
 
-        # Mark as published instead of deleting
-        confession.published = True
-        db.commit()
+#         # Mark as published instead of deleting
+#         confession.published = True
+#         db.commit()
         
-        return {
-            "status": "success",
-            "message": "Confession retrieved and marked as published",
-            "data": {
-                "id": confession.id,
-                "content": confession.content,
-                "published": confession.published,
-                "created_at": confession.created_at
-            }
-        }
+#         return {
+#             "status": "success",
+#             "message": "Confession retrieved and marked as published",
+#             "data": {
+#                 "id": confession.id,
+#                 "content": confession.content,
+#                 "published": confession.published,
+#                 "created_at": confession.created_at
+#             }
+#         }
     
-    except SQLAlchemyError as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail=f"Database error occurred: {str(e)}"
-        )
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail=f"An unexpected error occurred: {str(e)}"
-        )
+#     except SQLAlchemyError as e:
+#         db.rollback()
+#         raise HTTPException(
+#             status_code=500,
+#             detail=f"Database error occurred: {str(e)}"
+#         )
+#     except Exception as e:
+#         db.rollback()
+#         raise HTTPException(
+#             status_code=500,
+#             detail=f"An unexpected error occurred: {str(e)}"
+#         )
 
     

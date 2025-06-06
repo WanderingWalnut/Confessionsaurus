@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.models.confession import Confession
 from app.services.gemini_client import model
 from app.db.session import SessionLocal
+from typing import Optional
 
 def create_confession(db: Session, content: str):
     confession = Confession(content=content, published=False)
@@ -11,6 +12,75 @@ def create_confession(db: Session, content: str):
     db.commit()
     db.refresh(confession) # Get ID after insertion
     return confession
+
+def read_confession(db: Session, n: int = 5):
+    """ Grabs top n confessions that are READY """
+    try:
+        # Grab n confessions that are READY and OLDEST and return as a list
+        confessions = db.query(Confession)\
+            .filter(Confession.status == "READY")\
+            .order_by(Confession.created_at.asc())\
+            .limit(n)\
+            .all()
+
+        if not confessions:
+            print("No confessions available")
+            return []
+        
+        return confessions
+
+    except Exception as e:
+        print(f"Failed to read confessions: {str(e)}")
+        return []
+    
+    finally:
+        db.close()
+
+
+def delete_confession(db: Session, confession_id: int):
+    """ Deletes confession by specific ID """
+    try:
+        # First find the confession
+        confession = db.query(Confession).filter(Confession.id == confession_id).first()
+        if not confession:
+            print(f"No confession found with ID {confession_id}")
+            return False
+            
+        # Delete the specific confession
+        db.delete(confession)
+        db.commit()
+        print(f"Confession with ID {confession_id} has been deleted")
+        return True
+    
+    except Exception as e:
+        db.rollback()
+        print(f"Deleting confession failed: {str(e)}")
+        return False
+    
+    finally:
+        db.close()
+
+def update_confession_status(db: Session, confession: Confession):
+    """ Updates confession status to READY """
+    try:
+        if not confession:
+            print("Confession does not exist")
+            return False
+            
+        confession.status = "READY"
+        db.commit()  # Need to commit the changes
+        print(f"Updated confession {confession.id} status to READY")
+        return True
+        
+    except Exception as e:
+        db.rollback()  # Rollback on error
+        print(f"Failed to update confession status: {str(e)}")
+        return False
+        
+    finally:
+        db.close()
+
+
 
 
 
