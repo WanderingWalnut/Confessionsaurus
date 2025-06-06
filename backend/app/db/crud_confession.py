@@ -13,7 +13,7 @@ def create_confession(db: Session, content: str):
     db.refresh(confession) # Get ID after insertion
     return confession
 
-def read_confession(db: Session, n: int = 5):
+def get_ready_confession(db: Session, n: int = 5):
     """ Grabs top n confessions that are READY """
     try:
         # Grab n confessions that are READY and OLDEST and return as a list
@@ -36,6 +36,28 @@ def read_confession(db: Session, n: int = 5):
     finally:
         db.close()
 
+def get_unmoderated_confession(db: Session, n: int = 5):
+    """ Grab top n confessions that are NEW (unmoderated) """
+
+    try:
+        confessions = db.query(Confession)\
+        .filter(Confession.status == "NEW")\
+        .order_by(Confession.created_at.asc())\
+        .limit(n)\
+        .all()
+
+        if not confessions:
+            print(f"No confessions available")
+            return []
+
+        return confessions
+    
+    except Exception as e:
+        print(f"Error occured while grabbing unmoderated confessions: {str(e)}")
+        return []
+
+    finally:
+        db.close()
 
 def delete_confession(db: Session, confession_id: int):
     """ Deletes confession by specific ID """
