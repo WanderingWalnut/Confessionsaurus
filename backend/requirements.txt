@@ -7,3 +7,4 @@ python-dotenv
 instagrapi
 pillow
 google-generativeai
+APScheduler

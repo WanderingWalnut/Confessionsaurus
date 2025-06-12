@@ -36,7 +36,7 @@ def get_ready_confession(db: Session, n: int = 5):
     finally:
         db.close()
 
-def get_unmoderated_confession(db: Session):
+def get_unmoderated_confessions(db: Session):
     """ Grab all "NEW" (unmoderated) confessions  """
 
     try:
@@ -90,9 +90,9 @@ def update_confession_status(db: Session, confession: Confession, confession_sta
             print("Confession does not exist")
             return False
             
-        confession.status = "READY"
+        confession.status = confession_status
         db.commit()  # Need to commit the changes
-        print(f"Updated confession {confession.id} status to READY")
+        print(f"Updated confession {confession.id} status to {confession_status}")
         return True
         
     except Exception as e:
@@ -102,30 +102,6 @@ def update_confession_status(db: Session, confession: Confession, confession_sta
         
     finally:
         db.close()
-
-def update_confession_status_pending(db: Session, confession: Confession):
-    """ Updates confession status to PENDING """
-    try:
-        if not confession:
-            print("Confession does not exist")
-            return False
-            
-        confession.status = "PENDING"
-        db.commit()  # Need to commit the changes
-        print(f"Updated confession {confession.id} status to PENDING")
-        return True
-        
-    except Exception as e:
-        db.rollback()  # Rollback on error
-        print(f"Failed to update confession status: {str(e)}")
-        return False
-        
-    finally:
-        db.close()
-
-
-
-
 
 def generate_confessions(n: int = 5):
     """ Function used to create 5 new confessions for testing"""

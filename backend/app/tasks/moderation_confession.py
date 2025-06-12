@@ -1,6 +1,6 @@
 from app.services.moderation import moderate_confession
 from app.db.session import SessionLocal
-from app.db.crud_confession import get_unmoderated_confessions, update_confession_status_ready, update_confession_status_pending
+from app.db.crud_confession import get_unmoderated_confessions, update_confession_status
 
 
 def moderate_all_confessions():
@@ -16,10 +16,10 @@ def moderate_all_confessions():
                 
                 # If the confession is flagged
                 if moderated_confession.flagged:
-                    update_confession_status_pending(db, confession)
+                    update_confession_status(db, confession, "PENDING", moderated_confession.reason)
                 # If it is not flagged, stage as READY
                 else:
-                    update_confession_status_ready(db, confession)
+                    update_confession_status(db, confession, "READY")
         else:
             return []
     
@@ -30,3 +30,8 @@ def moderate_all_confessions():
 
     finally:
         db.close()
+
+
+if __name__ == "__main__":
+    moderate_all_confessions()
+
