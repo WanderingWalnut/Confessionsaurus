@@ -59,7 +59,7 @@ def moderate_confession(content: str) -> ModerationResponse:
             flagged=True,  # Be conservative - flag on error
             reason=f"Moderation error: {str(e)}"
         )
-# def geneerate_caption():
+# def generate_caption():
 """ Create this function, creates caption for post based on the content of the post"""
 
 if __name__ == "__main__":

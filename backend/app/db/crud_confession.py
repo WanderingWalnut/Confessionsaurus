@@ -36,16 +36,17 @@ def get_ready_confession(db: Session, n: int = 5):
     finally:
         db.close()
 
-def get_unmoderated_confession(db: Session, n: int = 5):
-    """ Grab top n confessions that are NEW (unmoderated) """
+def get_unmoderated_confession(db: Session):
+    """ Grab all "NEW" (unmoderated) confessions  """
 
     try:
+        # Query DB to grab all confessions marked as "NEW"
         confessions = db.query(Confession)\
         .filter(Confession.status == "NEW")\
         .order_by(Confession.created_at.asc())\
-        .limit(n)\
         .all()
 
+        # If no confessions exist
         if not confessions:
             print(f"No confessions available")
             return []
@@ -53,11 +54,11 @@ def get_unmoderated_confession(db: Session, n: int = 5):
         return confessions
     
     except Exception as e:
-        print(f"Error occured while grabbing unmoderated confessions: {str(e)}")
+        print(f"Error occurred while grabbing unmoderated confessions: {str(e)}")
         return []
 
     finally:
-        db.close()
+        db.close() # Close session
 
 def delete_confession(db: Session, confession_id: int):
     """ Deletes confession by specific ID """
@@ -82,7 +83,7 @@ def delete_confession(db: Session, confession_id: int):
     finally:
         db.close()
 
-def update_confession_status(db: Session, confession: Confession):
+def update_confession_status(db: Session, confession: Confession, confession_status: str, moderation_result_reason: Optional[str] = None):
     """ Updates confession status to READY """
     try:
         if not confession:
@@ -92,6 +93,26 @@ def update_confession_status(db: Session, confession: Confession):
         confession.status = "READY"
         db.commit()  # Need to commit the changes
         print(f"Updated confession {confession.id} status to READY")
+        return True
+        
+    except Exception as e:
+        db.rollback()  # Rollback on error
+        print(f"Failed to update confession status: {str(e)}")
+        return False
+        
+    finally:
+        db.close()
+
+def update_confession_status_pending(db: Session, confession: Confession):
+    """ Updates confession status to PENDING """
+    try:
+        if not confession:
+            print("Confession does not exist")
+            return False
+            
+        confession.status = "PENDING"
+        db.commit()  # Need to commit the changes
+        print(f"Updated confession {confession.id} status to PENDING")
         return True
         
     except Exception as e:
