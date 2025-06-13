@@ -7,6 +7,7 @@ import os
 
 
 def render_batch_images():
+    """ Create visuals for posts """
     db = SessionLocal()
     temp_files = [] # For storing the rendered images
 
@@ -19,6 +20,7 @@ def render_batch_images():
             return []
 
         for confession in confessions:
+            # TODO: Make sure to update status to POSTED
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
                 # Pass confession content (string) as input, not the entire confession object
                 render_confession_on_image(confession.content, output_path=tmp.name)
