@@ -57,9 +57,6 @@ def get_unmoderated_confessions(db: Session):
         print(f"Error occurred while grabbing unmoderated confessions: {str(e)}")
         return []
 
-    finally:
-        db.close() # Close session
-
 def delete_confession(db: Session, confession_id: int):
     """ Deletes confession by specific ID """
     try:
@@ -91,6 +88,11 @@ def update_confession_status(db: Session, confession: Confession, confession_sta
             return False
             
         confession.status = confession_status
+        # If a reason exists update it i.e Pending confession
+        if moderation_result_reason is not None:
+            confession.reason = moderation_result_reason
+            print(f"Confession is pending with following reason: {moderation_result_reason}")
+        
         db.commit()  # Need to commit the changes
         print(f"Updated confession {confession.id} status to {confession_status}")
         return True
@@ -100,8 +102,6 @@ def update_confession_status(db: Session, confession: Confession, confession_sta
         print(f"Failed to update confession status: {str(e)}")
         return False
         
-    finally:
-        db.close()
 
 def generate_confessions(n: int = 5):
     """ Function used to create 5 new confessions for testing"""

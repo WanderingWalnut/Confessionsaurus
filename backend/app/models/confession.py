@@ -18,3 +18,4 @@ class Confession(Base):
     published = Column(Boolean, server_default='FALSE')
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
     status = Column(PgEnum(ConfessionStatus), nullable=False, default=ConfessionStatus.new)
+    reason = Column(String, nullable=True)
