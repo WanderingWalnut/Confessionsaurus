@@ -20,8 +20,8 @@ def render_batch_images():
 
         for confession in confessions:
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
-                # Pass temp file as output path
-                render_confession_on_image(confession, output_path=tmp.name)
+                # Pass confession content (string) as input, not the entire confession object
+                render_confession_on_image(confession.content, output_path=tmp.name)
                 temp_files.append(tmp.name) # Store the file path for posting
         
         # Return the list of temp files to be processed for posting
@@ -59,7 +59,8 @@ def post_to_instagram():
         return None
 
     finally:
-        cleanup_temp_files()
+        # Delete the files
+        cleanup_temp_files(files_to_upload)
 
 
 if __name__ == "__main__":

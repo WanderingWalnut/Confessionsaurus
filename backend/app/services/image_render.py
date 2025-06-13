@@ -15,7 +15,10 @@ def render_confession_on_image(confession_text, bg_path="/Users/naveed/confessio
         y = 300
 
         for line in wrapped:
-            line_width, line_height = draw.textsize(line, font=font)
+            # Use modern Pillow methods - textbbox returns (left, top, right, bottom)
+            bbox = draw.textbbox((0, 0), line, font=font)
+            line_width = bbox[2] - bbox[0]  # right - left
+            line_height = bbox[3] - bbox[1]  # bottom - top
             x = (img.width - line_width) / 2
             draw.text((x,y), line, font=font, fill="black")
             y += line_height + 20

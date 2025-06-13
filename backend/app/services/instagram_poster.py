@@ -58,7 +58,7 @@ class InstagramSessionManager:
             # Verify the session is still valid
             try:
                 self.client.get_timeline_feed()
-                print("Session Logged In Successfully!")
+                print("Session Logged In Successfully! (Loaded)")
                 return True
             except LoginRequired:
                 print("Session expired or invalid ")
@@ -179,6 +179,7 @@ class InstagramSessionManager:
             raise Exception(f'Failed to maintain instagram session {str(Exception)}')
         
         # If logged in, post the album/carousel
+        print("Successfully posted carousel/album!")
         return self.client.album_upload(paths, caption)
 
 
