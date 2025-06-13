@@ -1,11 +1,13 @@
 # Handles everything related to posting
 
 import os
+from typing import List
 from dotenv import load_dotenv
 from instagrapi import Client
 from instagrapi.types import Location
 from instagrapi.exceptions import LoginRequired, ClientError
 from pathlib import Path
+from typing import Optional
 import json
 from datetime import datetime, timedelta
 from app.services.gemini_client import model
@@ -168,6 +170,16 @@ class InstagramSessionManager:
             caption,
             location=Location(name="Canada, Calgary", lat=51.05, lng=114.07)
             )
+    
+    def post_carousel(self, paths: List[str], caption: Optional[str] = None):
+        """ Post carousel/album to instagram """
+
+        # Ensure we are logged in
+        if not self.ensure_login():
+            raise Exception(f'Failed to maintain instagram session {str(Exception)}')
+        
+        # If logged in, post the album/carousel
+        return self.client.album_upload(paths, caption)
 
 
 
