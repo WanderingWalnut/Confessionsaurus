@@ -33,7 +33,7 @@ def render_confession_on_image(confession_text, bg_path="/Users/naveed/confessio
         print(f"File isn't an image or is corrupted {str(e)}")
 
 if __name__ == "__main__":
-    dummy_confession = "Today someone told me they ate a fat burger at this weird place, was soo awkward. hdkahskjdhaksdhakjshdkajshdkajshdkahsdkjahsdkajsdhkahsdkahsjd"
+    dummy_confession = "Today someone told me they ate a fat burger at this weird place, was soo awkward."
     try:
         out_path = render_confession_on_image(dummy_confession)
         print("Image rendered successfully at:", out_path)
