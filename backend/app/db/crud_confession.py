@@ -90,6 +90,8 @@ def update_confession_to_posted(db: Session, confession_id: int):
             print(f"Confession does not exist")
         
         confession.status = ConfessionStatus.posted # Best practice to use enum instead of str i.e don't use = "POSTED"
+        db.commit()
+        return confession
     
     except Exception as e:
         print(f"Failed to update confession status: {str(e)}")
