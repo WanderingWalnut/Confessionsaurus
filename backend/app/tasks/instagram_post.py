@@ -1,11 +1,12 @@
 import tempfile
 from app.services.image_render import render_confession_on_image
 from app.db.session import SessionLocal
-from app.db.crud_confession import get_ready_confession
+from app.db.crud_confession import get_ready_confession, update_confession_to_posted
 from app.services.instagram_poster import InstagramSessionManager
 import os
 
 
+# TODO: Integrate caption generation for posting
 def render_batch_images():
     """ Create visuals for posts """
     db = SessionLocal()
@@ -21,6 +22,7 @@ def render_batch_images():
 
         for confession in confessions:
             # TODO: Make sure to update status to POSTED
+            update_confession_to_posted(db, confession.id) # Update to posted so it doesn't keep getting re-posted
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
                 # Pass confession content (string) as input, not the entire confession object
                 render_confession_on_image(confession.content, output_path=tmp.name)

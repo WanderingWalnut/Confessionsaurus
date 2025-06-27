@@ -80,23 +80,31 @@ def delete_confession(db: Session, confession_id: int):
     finally:
         db.close()
 
-def update_confession_to_posted(db: Session, confession_id: int):
-    """" Updates confession to status POSTE D"""
+def update_confession_to_posted(db: Session, confession: Confession):
+    """" Updates confession to status POSTED"""
 
     try:
-        confession = db.query(confession).filter(Confession.id == confession_id)
+        # confession = db.query(Confession).filter(Confession.id == confession_id).first()
 
         if not confession:
-            print(f"Confession does not exist")
+            print(f"Confession with ID {confession.id} does not exist")
+            return False
         
-        confession.status = ConfessionStatus.posted # Best practice to use enum instead of str i.e don't use = "POSTED"
+        confession.status = ConfessionStatus.posted # Use .value to get "POSTED" instead of "posted"
         db.commit()
+        print(f"Successfully updated confession {confession.id} status to: {confession.status}")
         return confession
     
     except Exception as e:
         print(f"Failed to update confession status: {str(e)}")
         db.rollback()
         return False
+    
+    # Temp for testing run db.close(), in actual backend service main func will close session after all changes
+    finally:
+        db.close()
+
+#TODO: Create function that can delete posted confessions, run as a scheduled job after creating func
 
 def update_confession_status(db: Session, confession: Confession, confession_status: str, moderation_result_reason: Optional[str] = None):
     """ Updates confession status to READY """
@@ -160,4 +168,15 @@ if __name__ == "__main__":
     # Create instance with skip_login=True to avoid Instagram login
     # session = InstagramSessionManager(skip_login=True)
     # Just generate 5 confessions
-    generate_confessions()
+    # generate_confessions()
+
+    db = SessionLocal()
+
+    try:
+        confession = db.query(Confession).first()
+        print(f"Using following confession: {confession}")
+        # Testing confession status updated
+        update_confession_to_posted(db, confession)
+    
+    except Exception as e:
+        print(f"Failed to fetch confession: {str(e)}")
