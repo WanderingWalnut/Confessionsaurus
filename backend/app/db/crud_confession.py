@@ -168,15 +168,15 @@ if __name__ == "__main__":
     # Create instance with skip_login=True to avoid Instagram login
     # session = InstagramSessionManager(skip_login=True)
     # Just generate 5 confessions
-    # generate_confessions()
+    generate_confessions()
 
-    db = SessionLocal()
+    # db = SessionLocal()
 
-    try:
-        confession = db.query(Confession).first()
-        print(f"Using following confession: {confession}")
-        # Testing confession status updated
-        update_confession_to_posted(db, confession)
+    # try:
+    #     confession = db.query(Confession).first()
+    #     print(f"Using following confession: {confession}")
+    #     # Testing confession status updated
+    #     update_confession_to_posted(db, confession)
     
-    except Exception as e:
-        print(f"Failed to fetch confession: {str(e)}")
+    # except Exception as e:
+    #     print(f"Failed to fetch confession: {str(e)}")
