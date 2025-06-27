@@ -1,7 +1,7 @@
 # All create, read, update and delete functions for confession related DB data
 
 from sqlalchemy.orm import Session
-from app.models.confession import Confession
+from app.models.confession import Confession, ConfessionStatus
 from app.services.gemini_client import model
 from app.db.session import SessionLocal
 from typing import Optional
@@ -79,6 +79,22 @@ def delete_confession(db: Session, confession_id: int):
     
     finally:
         db.close()
+
+def update_confession_to_posted(db: Session, confession_id: int):
+    """" Updates confession to status POSTE D"""
+
+    try:
+        confession = db.query(confession).filter(Confession.id == confession_id)
+
+        if not confession:
+            print(f"Confession does not exist")
+        
+        confession.status = ConfessionStatus.posted # Best practice to use enum instead of str i.e don't use = "POSTED"
+    
+    except Exception as e:
+        print(f"Failed to update confession status: {str(e)}")
+        db.rollback()
+        return False
 
 def update_confession_status(db: Session, confession: Confession, confession_status: str, moderation_result_reason: Optional[str] = None):
     """ Updates confession status to READY """

@@ -9,6 +9,7 @@ class ConfessionStatus(str, Enum):
     new = "NEW"
     pending = "PENDING"
     ready = "READY"
+    posted = "POSTED"
 
 class Confession(Base):
     __tablename__ = "confessions"
