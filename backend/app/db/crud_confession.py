@@ -105,6 +105,30 @@ def update_confession_to_posted(db: Session, confession_id: int):
 
 #TODO: Create function that can delete posted confessions, run as a scheduled job after creating func
 
+def delete_posted_confessions(db: Session):
+    """ Deletes confessions that are posted """
+
+    confessions = []
+
+    try:
+        confessions = db.query(Confession).filter(Confession.status == "POSTED").all()
+
+        if not confessions:
+            print(f"No posted confessions exist")
+            return False
+        
+        for confession in confessions:
+            db.delete(confessions)
+        
+        db.commit() # Update changes after deleting all posted confessions
+    
+    except Exception as e:
+        print(f"Failed to delete posted confessions: {str(e)}")
+        db.rollback()
+        return False
+    
+
+
 def update_confession_status(db: Session, confession: Confession, confession_status: str, moderation_result_reason: Optional[str] = None):
     """ Updates confession status to READY """
     try:
