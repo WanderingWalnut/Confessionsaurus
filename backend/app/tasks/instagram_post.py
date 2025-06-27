@@ -15,18 +15,19 @@ def render_batch_images():
     try:
 
         confessions = get_ready_confession(db)
+        # TODO: After confessions are posted, when new ones are added they are not picked up
 
         if not confessions:
             print(f"No confessions available")
             return []
 
         for confession in confessions:
-            # TODO: Make sure to update status to POSTED
-            update_confession_to_posted(db, confession.id) # Update to posted so it doesn't keep getting re-posted
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
                 # Pass confession content (string) as input, not the entire confession object
                 render_confession_on_image(confession.content, output_path=tmp.name)
                 temp_files.append(tmp.name) # Store the file path for posting
+            
+            update_confession_to_posted(db, confession.id) # Update to posted so it doesn't keep getting re-posted
         
         # Return the list of temp files to be processed for posting
         print(f'Render successful! Here are the list of temp files: {temp_files}')

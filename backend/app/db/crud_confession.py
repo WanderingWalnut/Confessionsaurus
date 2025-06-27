@@ -33,8 +33,7 @@ def get_ready_confession(db: Session, n: int = 5):
         print(f"Failed to read confessions: {str(e)}")
         return []
     
-    finally:
-        db.close()
+    # If testing standalone function, use finally: db.close()
 
 def get_unmoderated_confessions(db: Session):
     """ Grab all "NEW" (unmoderated) confessions  """
@@ -80,17 +79,17 @@ def delete_confession(db: Session, confession_id: int):
     finally:
         db.close()
 
-def update_confession_to_posted(db: Session, confession: Confession):
+def update_confession_to_posted(db: Session, confession_id: int):
     """" Updates confession to status POSTED"""
 
     try:
-        # confession = db.query(Confession).filter(Confession.id == confession_id).first()
+        confession = db.query(Confession).filter(Confession.id == confession_id).first()
 
         if not confession:
             print(f"Confession with ID {confession.id} does not exist")
             return False
         
-        confession.status = ConfessionStatus.posted # Use .value to get "POSTED" instead of "posted"
+        confession.status = ConfessionStatus.posted.value # Use .value to get "POSTED" instead of "posted"
         db.commit()
         print(f"Successfully updated confession {confession.id} status to: {confession.status}")
         return confession
@@ -101,8 +100,8 @@ def update_confession_to_posted(db: Session, confession: Confession):
         return False
     
     # Temp for testing run db.close(), in actual backend service main func will close session after all changes
-    finally:
-        db.close()
+    # finally:
+    #     db.close()
 
 #TODO: Create function that can delete posted confessions, run as a scheduled job after creating func
 
@@ -176,7 +175,7 @@ if __name__ == "__main__":
     #     confession = db.query(Confession).first()
     #     print(f"Using following confession: {confession}")
     #     # Testing confession status updated
-    #     update_confession_to_posted(db, confession)
+    #     update_confession_to_posted(db, 2) # For test update confession id 2
     
     # except Exception as e:
     #     print(f"Failed to fetch confession: {str(e)}")
