@@ -3,8 +3,8 @@ from fastapi import FastAPI
 # It's like saying "get the router from the api folder and call it api_router"
 from .api import router as api_router
 
-from .models.confession import Base
-from .db.session import engine
+from .db.session import Base, engine
+
 
 Base.metadata.create_all(bind=engine)
 
