@@ -105,9 +105,10 @@ def update_confession_to_posted(db: Session, confession_id: int):
 
 #TODO: Create function that can delete posted confessions, run as a scheduled job after creating func
 
-def delete_posted_confessions(db: Session):
+def delete_posted_confessions():
     """ Deletes confessions that are posted """
-
+    
+    db = SessionLocal()
     confessions = []
 
     try:
@@ -126,6 +127,9 @@ def delete_posted_confessions(db: Session):
         print(f"Failed to delete posted confessions: {str(e)}")
         db.rollback()
         return False
+
+    finally:
+        db.close()
     
 
 
