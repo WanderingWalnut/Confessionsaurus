@@ -11,10 +11,12 @@ def render_batch_images():
     """ Create visuals for posts """
     db = SessionLocal()
     temp_files = [] # For storing the rendered images
-
+    confession_text = [] # List of content within confessions for caption generation
+    
     try:
 
         confessions = get_ready_confession(db)
+
         # TODO: After confessions are posted, when new ones are added they are not picked up
 
         if not confessions:
@@ -22,6 +24,8 @@ def render_batch_images():
             return []
 
         for confession in confessions:
+            confession_text.append(confession.content)
+            
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
                 # Pass confession content (string) as input, not the entire confession object
                 render_confession_on_image(confession.content, output_path=tmp.name)
@@ -31,7 +35,8 @@ def render_batch_images():
         
         # Return the list of temp files to be processed for posting
         print(f'Render successful! Here are the list of temp files: {temp_files}')
-        return temp_files
+        print(f"List of confession texts created: {confession_text}")
+        return temp_files, confession_text
 
     except Exception as e:
         print(f"Failed to render images for confessions: {str(e)}")
@@ -56,8 +61,14 @@ def post_to_instagram():
     session = InstagramSessionManager()
     
     try:
-        files_to_upload = render_batch_images()
-        session.post_carousel(files_to_upload)
+        files_to_upload, confessions_text = render_batch_images()
+        caption = session.create_caption(confessions_text)
+        if caption:
+            print(f"Caption created successfully: {caption}")
+        else:
+            print("Failed to create caption")
+
+        session.post_carousel(files_to_upload, caption)
     
     except Exception as e:
         print(f"Failed to post on instagram: {str(e)}")

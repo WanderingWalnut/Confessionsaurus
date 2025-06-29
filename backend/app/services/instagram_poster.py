@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 from app.services.gemini_client import model
 from app.db.session import SessionLocal
 from app.db.crud_confession import create_confession
+from ..models.gemini import CaptionResponse
 
 class InstagramSessionManager:
 
@@ -124,35 +125,47 @@ class InstagramSessionManager:
         confession_content = '\n'.join(formatted_confession)
         
         
-        prompt = """"You are an Instagram social media manager for a university confessions page.
+        prompt = f"""
+        You are an Instagram social media manager for a university confessions page.
 
-        Your goal is to generate a fun, engaging, and highly relatable caption based on the set of confessions being posted in a carousel. 
+        Your goal is to generate a single, fun, engaging, and highly relatable caption for a carousel post based on the set of confessions below.
 
         Guidelines:
         - Write in a casual, energetic, and meme-like tone.
         - Use phrases like "HELL NOOOO", "what y'all think?", "this one is wild fr 😭", "give advice in the comments‼️" to make the caption feel like it's talking to friends.
         - Make the audience *want* to engage — ask for their thoughts, advice, or reactions.
-        - If possible, tease the confessions across slides. (e.g., "Slide 1: vulnerability sucks 🤡 Slide 2: the tea is hot 🍵")
+        - You can tease or reference the confessions, but you do NOT have to mention every slide.
         - Keep it short and punchy, avoid long paragraphs.
         - Emojis are encouraged but don't overdo them (1-2 per line max).
         - End with a direct engagement hook — e.g., "drop your advice 👇" or "who's guilty of this? 😭"
 
-        Important:
-        - Do NOT explain the confessions — just tease or hint.
-        - Do NOT use hashtags or tag anyone.
-        - Write the response as a **single raw text caption** only — no extra explanation or formatting.
+        **IMPORTANT:**
+        - Output ONLY one caption as a single line of text.
+        - Do NOT include any explanations, options, formatting, or extra text.
+        - Do NOT use markdown, bullet points, or headings.
+        - Do NOT say anything like "Here is your caption:" or "Option 1:".
+        - Just output the caption itself, nothing else.
 
-        Example captions:
-        - "HELLLL NOOOO 😭 but what y'all think?? Slide 3 got me crying fr 😭"
-        - "vulnerability = pain 🤡 slide 2 is even worse lmao. Advice?? 👇"
-        - "no cuz slide 3 is just criminal behavior 💀 y'all ever seen worse???
+        **Sample Outputs:**
+        - "Y'all ever seen a wilder batch? Slide 2 had me crying 😭 drop your thoughts 👇"
+        - "Confessions got me rethinking my life choices... what y'all think??"
+        - "This week's confessions are next level 💀 advice for these folks??"
+        - "Some of y'all need therapy, not Instagram 😭 who's guilty of this? 👇"
+        - "Slide 1 is wild, but Slide 3?? Nah, that's criminal behavior 💀"
 
         Confessions:
         {confession_content}
         """
+        try:
+            response = model.generate_content(prompt)
+            caption_text = response.text.strip() # Process str response
+            print(f"Raw response text for caption: {caption_text}")
 
-        response = model.generate_content(prompt)
-
+            return caption_text
+        
+        except Exception as e:
+            print(f"Failed to create a caption: {e}")
+            return None
 
     def post_photo(self, image_path: str, caption: str):
         """ Post a photo to instagram """
