@@ -119,7 +119,7 @@ def delete_posted_confessions():
             return False
         
         for confession in confessions:
-            db.delete(confessions)
+            db.delete(confession)
         
         db.commit() # Update changes after deleting all posted confessions
     

@@ -23,13 +23,13 @@ def run_delete_posted_confessions_job():
 if __name__ == "__main__":
     scheduler = BlockingScheduler() 
 
-    # scheduler.add_job(generate_confessions, 'interval', minutes = 1, id='generate')
+    scheduler.add_job(generate_confessions, 'interval', minutes = 1, id='generate')
 
-    # # Run every hour
-    # scheduler.add_job(run_moderation_job, 'interval', minutes = 2, id="moderate")
+    # Run every hour
+    scheduler.add_job(run_moderation_job, 'interval', minutes = 2, id="moderate")
 
-    # # Run every 2 hours
-    # scheduler.add_job(run_post_to_instagram_job, 'interval', minutes=3, id="post")
+    # Run every 2 hours
+    scheduler.add_job(run_post_to_instagram_job, 'interval', minutes=3, id="post")
 
     scheduler.add_job(delete_posted_confessions, 'interval', minutes=1, id='delete')
 
