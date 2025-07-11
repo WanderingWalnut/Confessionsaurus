@@ -12,7 +12,9 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 origins = [
-    "http://localhost:5173" # Add production frontend when available
+    "http://localhost:5173", # Add production frontend when available
+    "http://confessionsaurus.s3-website.us-east-2.amazonaws.com", # S3 bucket link
+    # TODO: Add Cloudfront link when available
 ]
 
 # Add CORS middleware
