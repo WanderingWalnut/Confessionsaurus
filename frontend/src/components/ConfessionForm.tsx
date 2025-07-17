@@ -53,21 +53,32 @@ const ConfessionForm: React.FC = () => {
         flexDirection: "column",
         gap: 3,
         mt: 2,
+        backgroundColor: "#fff",
+        borderRadius: 3,
+        padding: 4,
+        boxShadow: "0 8px 32px rgba(220, 38, 38, 0.1)",
+        border: "3px solid #fecaca",
       }}
     >
-      <Typography variant="h6" align="center" fontWeight={600} mb={1}>
-        Your Confession
+      <Typography
+        variant="h5"
+        align="center"
+        fontWeight={700}
+        mb={2}
+        sx={{
+          color: "#dc2626",
+          fontFamily: "Comic Sans MS, cursive",
+          textShadow: "2px 2px 4px rgba(220, 38, 38, 0.2)",
+        }}
+      >
+        🦕 Share Your Prehistoric Secret! 🦖
       </Typography>
       <TextField
         id="content"
         name="content"
-        label="Share your thoughts..."
+        label="What's on your mind, dinosaur friend?"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        //     ↑        ↑                    ↑
-        //   "Watch"  "When"              "Get the text"
-        //   for      user types           from the box
-        //   changes  in the box           and save it
         required
         multiline
         minRows={6}
@@ -75,27 +86,45 @@ const ConfessionForm: React.FC = () => {
         fullWidth
         InputProps={{
           sx: {
-            backgroundColor: "#222",
-            color: "#fff",
-            borderColor: "#444",
+            backgroundColor: "#fef2f2",
+            color: "#991b1b",
+            borderColor: "#fecaca",
+            borderRadius: 2,
             "& fieldset": {
-              borderColor: "#444",
+              borderColor: "#fecaca",
+              borderWidth: 2,
             },
             "&:hover fieldset": {
-              borderColor: "#666",
+              borderColor: "#fca5a5",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "#fff",
+              borderColor: "#dc2626",
+              borderWidth: 3,
+            },
+            "& .MuiInputBase-input": {
+              fontFamily: "Comic Sans MS, cursive",
+              fontSize: "16px",
             },
           },
         }}
         InputLabelProps={{
-          sx: { color: "#aaa" },
+          sx: {
+            color: "#dc2626",
+            fontFamily: "Comic Sans MS, cursive",
+            fontWeight: 600,
+          },
         }}
       />
       {error && (
-        <Typography color="error" mb={1}>
-          {error}
+        <Typography
+          color="error"
+          mb={1}
+          sx={{
+            fontFamily: "Comic Sans MS, cursive",
+            fontWeight: 600,
+          }}
+        >
+          🦕 Oops! {error} 🦖
         </Typography>
       )}
       <Button
@@ -104,16 +133,27 @@ const ConfessionForm: React.FC = () => {
         size="large"
         disabled={isSubmitting}
         sx={{
-          fontWeight: 600,
-          backgroundColor: "#222",
+          fontWeight: 700,
+          backgroundColor: "#dc2626",
           color: "#fff",
+          fontFamily: "Comic Sans MS, cursive",
+          fontSize: "18px",
+          borderRadius: 3,
+          padding: "12px 24px",
+          boxShadow: "0 4px 16px rgba(220, 38, 38, 0.3)",
           "&:hover": {
-            backgroundColor: "#111",
+            backgroundColor: "#b91c1c",
+            boxShadow: "0 6px 20px rgba(220, 38, 38, 0.4)",
+            transform: "translateY(-2px)",
           },
-          border: "1px solid #444",
+          "&:disabled": {
+            backgroundColor: "#fca5a5",
+            color: "#991b1b",
+          },
+          border: "3px solid #fecaca",
         }}
       >
-        {isSubmitting ? "Submitting..." : "Submit Confession"}
+        {isSubmitting ? "🦕 Submitting..." : "🦖 Submit Confession!"}
       </Button>
     </Box>
   );
