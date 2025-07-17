@@ -14,7 +14,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5173", # Add production frontend when available
     "http://confessionsaurus.s3-website.us-east-2.amazonaws.com", # S3 bucket link
-    # TODO: Add Cloudfront link when available
+    "https://confessionsaurus.com" # Deployed AWS amplify link
 ]
 
 # Add CORS middleware
