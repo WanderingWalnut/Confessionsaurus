@@ -1,14 +1,30 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # It's like saying "get the router from the api folder and call it api_router"
 from .api import router as api_router
 
-from .models.confession import Base
-from .db.session import engine
+from .db.session import Base, engine
+
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173", # Add production frontend when available
+    "http://confessionsaurus.s3-website.us-east-2.amazonaws.com", # S3 bucket link
+    "https://confessionsaurus.com" # Deployed AWS amplify link
+]
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True, # Only needed for auth/cookies
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 # Include the main API router with prefix, It's like saying "use this router, and put all its routes under /api"
 app.include_router(api_router, prefix="/api")

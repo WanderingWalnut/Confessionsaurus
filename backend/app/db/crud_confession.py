@@ -1,7 +1,7 @@
 # All create, read, update and delete functions for confession related DB data
 
 from sqlalchemy.orm import Session
-from app.models.confession import Confession
+from app.models.confession import Confession, ConfessionStatus
 from app.services.gemini_client import model
 from app.db.session import SessionLocal
 from typing import Optional
@@ -33,8 +33,7 @@ def get_ready_confession(db: Session, n: int = 5):
         print(f"Failed to read confessions: {str(e)}")
         return []
     
-    finally:
-        db.close()
+    # If testing standalone function, use finally: db.close()
 
 def get_unmoderated_confessions(db: Session):
     """ Grab all "NEW" (unmoderated) confessions  """
@@ -79,6 +78,60 @@ def delete_confession(db: Session, confession_id: int):
     
     finally:
         db.close()
+
+def update_confession_to_posted(db: Session, confession_id: int):
+    """" Updates confession to status POSTED"""
+
+    try:
+        confession = db.query(Confession).filter(Confession.id == confession_id).first()
+
+        if not confession:
+            print(f"Confession with ID {confession.id} does not exist")
+            return False
+        
+        confession.status = ConfessionStatus.posted.value # Use .value to get "POSTED" instead of "posted"
+        db.commit()
+        print(f"Successfully updated confession {confession.id} status to: {confession.status}")
+        return confession
+    
+    except Exception as e:
+        print(f"Failed to update confession status: {str(e)}")
+        db.rollback()
+        return False
+    
+    # Temp for testing run db.close(), in actual backend service main func will close session after all changes
+    # finally:
+    #     db.close()
+
+#TODO: Create function that can delete posted confessions, run as a scheduled job after creating func
+
+def delete_posted_confessions():
+    """ Deletes confessions that are posted """
+    
+    db = SessionLocal()
+    confessions = []
+
+    try:
+        confessions = db.query(Confession).filter(Confession.status == "POSTED").all()
+
+        if not confessions:
+            print(f"No posted confessions exist")
+            return False
+        
+        for confession in confessions:
+            db.delete(confession)
+        
+        db.commit() # Update changes after deleting all posted confessions
+    
+    except Exception as e:
+        print(f"Failed to delete posted confessions: {str(e)}")
+        db.rollback()
+        return False
+
+    finally:
+        db.close()
+    
+
 
 def update_confession_status(db: Session, confession: Confession, confession_status: str, moderation_result_reason: Optional[str] = None):
     """ Updates confession status to READY """
@@ -143,3 +196,14 @@ if __name__ == "__main__":
     # session = InstagramSessionManager(skip_login=True)
     # Just generate 5 confessions
     generate_confessions()
+
+    # db = SessionLocal()
+
+    # try:
+    #     confession = db.query(Confession).first()
+    #     print(f"Using following confession: {confession}")
+    #     # Testing confession status updated
+    #     update_confession_to_posted(db, 2) # For test update confession id 2
+    
+    # except Exception as e:
+    #     print(f"Failed to fetch confession: {str(e)}")

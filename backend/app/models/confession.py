@@ -2,13 +2,13 @@
 from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text, Enum as PgEnum
 from sqlalchemy.ext.declarative import declarative_base
 from enum import Enum
-
-Base = declarative_base()
+from app.db.session import Base
 
 class ConfessionStatus(str, Enum):
     new = "NEW"
     pending = "PENDING"
     ready = "READY"
+    posted = "POSTED"
 
 class Confession(Base):
     __tablename__ = "confessions"

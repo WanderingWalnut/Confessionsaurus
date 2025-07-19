@@ -7,3 +7,8 @@ class ModerationResponse(BaseModel):
     """
     flagged: bool  # True if content violates guidelines, False if clean
     reason: Optional[str] = None  # Reason for flagging, or None if clean
+
+
+class CaptionResponse(BaseModel):
+    """ SImple model for Gemini's caption response """
+    response: str

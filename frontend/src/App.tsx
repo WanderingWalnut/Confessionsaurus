@@ -1,4 +1,3 @@
-import React from "react";
 import SubmitConfession from "./pages/SubmitConfession";
 import "./App.css";
 

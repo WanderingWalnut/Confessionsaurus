@@ -8,3 +8,4 @@ instagrapi
 pillow
 google-generativeai
 APScheduler
+alembic

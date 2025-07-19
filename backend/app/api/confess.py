@@ -10,7 +10,7 @@ router = APIRouter()
 @router.post("/submit")
 def submit_confession(confession: schemas.ConfessionBase, db: Session = Depends(get_db)):
     try:
-        # Create a new db model insatnce
+        # Create a new db model instance
         db_confession = models.Confession(
             content=confession.content
         )
@@ -41,7 +41,7 @@ def submit_confession(confession: schemas.ConfessionBase, db: Session = Depends(
 
         raise HTTPException(
             status_code=500,
-            detail=f"An error occured while creating the confession: {str(e)}"
+            detail=f"An error occurred while creating the confession: {str(e)}"
         )
 
 # @router.get("/confessions")

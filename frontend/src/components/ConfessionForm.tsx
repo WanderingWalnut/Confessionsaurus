@@ -1,28 +1,11 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import type { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-interface ConfessionFormData {
-  content: string;
-  category?: string;
-  isAnonymous: boolean;
-}
-
 const ConfessionForm: React.FC = () => {
-  const [formData, setFormData] = useState<ConfessionFormData>({
-    content: "",
-    category: "",
-    isAnonymous: true,
-  });
+  const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,38 +15,31 @@ const ConfessionForm: React.FC = () => {
     setError(null);
 
     try {
-      // TODO: Implement API call
-      console.log("Submitting confession:", formData);
-      setFormData({
-        content: "",
-        category: "",
-        isAnonymous: true,
+      const response = await fetch("http://127.0.0.1:8000/api/confess/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: content,
+        }),
       });
-    } catch (err) {
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Response: ", data);
+
+      // Only reset form on success
+      setContent("");
+    } catch (error) {
+      console.error("An error occurred: ", error);
       setError("Failed to submit confession. Please try again.");
-      console.error("Error submitting confession:", err);
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const target = e.target;
-    const name = target.name;
-    let value: string | boolean = target.value;
-    if (target.type === "checkbox") {
-      value = (target as HTMLInputElement).checked;
-    }
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCategoryChange = (event: SelectChangeEvent) => {
-    setFormData((prev) => ({
-      ...prev,
-      category: event.target.value as string,
-    }));
   };
 
   return (
@@ -77,17 +53,32 @@ const ConfessionForm: React.FC = () => {
         flexDirection: "column",
         gap: 3,
         mt: 2,
+        backgroundColor: "#fff",
+        borderRadius: 3,
+        padding: 4,
+        boxShadow: "0 8px 32px rgba(220, 38, 38, 0.1)",
+        border: "3px solid #fecaca",
       }}
     >
-      <Typography variant="h6" align="center" fontWeight={600} mb={1}>
-        Your Confession
+      <Typography
+        variant="h5"
+        align="center"
+        fontWeight={700}
+        mb={2}
+        sx={{
+          color: "#dc2626",
+          fontFamily: "Comic Sans MS, cursive",
+          textShadow: "2px 2px 4px rgba(220, 38, 38, 0.2)",
+        }}
+      >
+        🦕 Share Your Prehistoric Secret! 🦖
       </Typography>
       <TextField
         id="content"
         name="content"
-        label="Share your thoughts..."
-        value={formData.content}
-        onChange={handleChange}
+        label="What's on your mind, dinosaur friend?"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
         required
         multiline
         minRows={6}
@@ -95,86 +86,45 @@ const ConfessionForm: React.FC = () => {
         fullWidth
         InputProps={{
           sx: {
-            backgroundColor: "#222",
-            color: "#fff",
-            borderColor: "#444",
+            backgroundColor: "#fef2f2",
+            color: "#991b1b",
+            borderColor: "#fecaca",
+            borderRadius: 2,
             "& fieldset": {
-              borderColor: "#444",
+              borderColor: "#fecaca",
+              borderWidth: 2,
             },
             "&:hover fieldset": {
-              borderColor: "#666",
+              borderColor: "#fca5a5",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "#fff",
+              borderColor: "#dc2626",
+              borderWidth: 3,
+            },
+            "& .MuiInputBase-input": {
+              fontFamily: "Comic Sans MS, cursive",
+              fontSize: "16px",
             },
           },
         }}
         InputLabelProps={{
-          sx: { color: "#aaa" },
-        }}
-      />
-      <FormControl
-        fullWidth
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            backgroundColor: "#222",
-            color: "#fff",
-            "& fieldset": {
-              borderColor: "#444",
-            },
-            "&:hover fieldset": {
-              borderColor: "#666",
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#fff",
-            },
+          sx: {
+            color: "#dc2626",
+            fontFamily: "Comic Sans MS, cursive",
+            fontWeight: 600,
           },
         }}
-      >
-        <InputLabel id="category-label" sx={{ color: "#aaa" }}>
-          Category
-        </InputLabel>
-        <Select
-          labelId="category-label"
-          id="category"
-          name="category"
-          value={formData.category}
-          label="Category"
-          onChange={handleCategoryChange}
-          sx={{ color: "#fff" }}
-          MenuProps={{
-            PaperProps: {
-              sx: {
-                backgroundColor: "#222",
-                color: "#fff",
-              },
-            },
-          }}
-        >
-          <MenuItem value="">Select a category</MenuItem>
-          <MenuItem value="academic">Academic</MenuItem>
-          <MenuItem value="social">Social</MenuItem>
-          <MenuItem value="personal">Personal</MenuItem>
-          <MenuItem value="other">Other</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControlLabel
-        control={
-          <Checkbox
-            id="isAnonymous"
-            name="isAnonymous"
-            checked={formData.isAnonymous}
-            onChange={handleChange}
-            color="primary"
-            sx={{ color: "#aaa", "&.Mui-checked": { color: "#fff" } }}
-          />
-        }
-        label="Post anonymously"
-        sx={{ mb: 1, color: "#fff" }}
       />
       {error && (
-        <Typography color="error" mb={1}>
-          {error}
+        <Typography
+          color="error"
+          mb={1}
+          sx={{
+            fontFamily: "Comic Sans MS, cursive",
+            fontWeight: 600,
+          }}
+        >
+          🦕 Oops! {error} 🦖
         </Typography>
       )}
       <Button
@@ -183,16 +133,27 @@ const ConfessionForm: React.FC = () => {
         size="large"
         disabled={isSubmitting}
         sx={{
-          fontWeight: 600,
-          backgroundColor: "#222",
+          fontWeight: 700,
+          backgroundColor: "#dc2626",
           color: "#fff",
+          fontFamily: "Comic Sans MS, cursive",
+          fontSize: "18px",
+          borderRadius: 3,
+          padding: "12px 24px",
+          boxShadow: "0 4px 16px rgba(220, 38, 38, 0.3)",
           "&:hover": {
-            backgroundColor: "#111",
+            backgroundColor: "#b91c1c",
+            boxShadow: "0 6px 20px rgba(220, 38, 38, 0.4)",
+            transform: "translateY(-2px)",
           },
-          border: "1px solid #444",
+          "&:disabled": {
+            backgroundColor: "#fca5a5",
+            color: "#991b1b",
+          },
+          border: "3px solid #fecaca",
         }}
       >
-        {isSubmitting ? "Submitting..." : "Submit Confession"}
+        {isSubmitting ? "🦕 Submitting..." : "🦖 Submit Confession!"}
       </Button>
     </Box>
   );
