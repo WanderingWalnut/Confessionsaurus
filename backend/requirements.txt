@@ -1,11 +1,9 @@
 fastapi
-uvicorn
+mangum
 sqlalchemy
 pydantic
 psycopg2-binary
-python-dotenv
 instagrapi
 pillow
 google-generativeai
-APScheduler
-alembic
+python-dotenv

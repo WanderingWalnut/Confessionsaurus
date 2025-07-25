@@ -4,8 +4,9 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-NEON_TECH_DB_URL = os.getenv("NEON_TECH_DB_URL")
+# load_dotenv()  # Commented out for Lambda - env vars set in AWS console
+# NEON_TECH_DB_URL = os.getenv("NEON_TECH_DB_URL")  # Commented out for Lambda
+NEON_TECH_DB_URL = os.environ['NEON_TECH_DB_URL']  # Lambda-compatible
 
 engine = create_engine(NEON_TECH_DB_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

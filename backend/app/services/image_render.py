@@ -1,37 +1,56 @@
-from PIL import Image, ImageDraw, ImageFont
-import textwrap
+import os
 import time
+import textwrap
+from PIL import Image, ImageDraw, ImageFont
 
-def render_confession_on_image(confession_text, bg_path="/Users/naveed/confessionsaurus/backend/assets/Background.jpg", output_path=None, font_path="/Users/naveed/confessionsaurus/backend/assets/fonts/Fredoka-Regular.ttf"):
-    if output_path is None:
-        timestamp = int(time.time())
-        output_path = f"/Users/naveed/confessionsaurus/backend/output/confession_{timestamp}.jpg"
+# If your handler lives in lambda_package/app/main.py, then:
+#  __file__                         -> /var/task/app/main.py
+#  dirname(__file__)                -> /var/task
+#  dirname(dirname(__file__))       -> /var/task   ← bundle root
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def render_confession_on_image(
+    confession_text: str,
+    bg_filename: str   = "Background.jpg",
+    font_filename: str = "Fredoka-Regular.ttf"
+) -> str:
+    """
+    Expects on-disk layout under /var/task/ (the Lambda bundle root):
+      • assets/Background.jpg
+      • assets/fonts/Fredoka-Regular.ttf
+      • app/main.py      ← this module
+    Writes the result into /tmp/.
+    """
     try:
-        img = Image.open(bg_path).convert("RGB")
+        # Point at the assets folder that sits next to app/
+        bg_path   = os.path.join(BASE_DIR, "assets",         bg_filename)
+        font_path = os.path.join(BASE_DIR, "assets", "fonts", font_filename)
+
+        # Lambda only lets you write under /tmp
+        ts = int(time.time())
+        output_path = os.path.join("/tmp", f"confession_{ts}.jpg")
+
+        # Pillow logic
+        img  = Image.open(bg_path).convert("RGB")
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype(font_path, size=50)
 
         wrapped = textwrap.wrap(confession_text, width=40)
         y = 300
-
         for line in wrapped:
-            # Use modern Pillow methods - textbbox returns (left, top, right, bottom)
             bbox = draw.textbbox((0, 0), line, font=font)
-            line_width = bbox[2] - bbox[0]  # right - left
-            line_height = bbox[3] - bbox[1]  # bottom - top
-            x = (img.width - line_width) / 2
-            draw.text((x,y), line, font=font, fill="black")
-            y += line_height + 20
-        
+            w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+            x    = (img.width - w) / 2
+            draw.text((x, y), line, font=font, fill="black")
+            y += h + 20
+
         img.save(output_path)
         return output_path
-    
+
     except IOError as e:
         print(f"File could not be found or opened: {str(e)}")
-    
     except Image.DecompressionBombError as e:
         print(f"File is too large {str(e)}")
-    
     except Image.UnidentifiedImageError as e:
         print(f"File isn't an image or is corrupted {str(e)}")
 

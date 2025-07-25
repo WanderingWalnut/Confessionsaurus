@@ -94,8 +94,10 @@ class InstagramSessionManager:
         """ Login if session from file does not exist/not valid """
         try:
             # Load credentials
-            username = os.getenv("INSTAGRAM_USERNAME")
-            password = os.getenv("INSTAGRAM_PASSWORD")
+            # username = os.getenv("INSTAGRAM_USERNAME")  # Commented out for Lambda
+            # password = os.getenv("INSTAGRAM_PASSWORD")  # Commented out for Lambda
+            username = os.environ['INSTAGRAM_USERNAME']  # Lambda-compatible
+            password = os.environ['INSTAGRAM_PASSWORD']  # Lambda-compatible
 
             # Login
             try:

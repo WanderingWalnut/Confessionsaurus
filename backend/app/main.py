@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from mangum import Mangum
 from fastapi.middleware.cors import CORSMiddleware
 
 # It's like saying "get the router from the api folder and call it api_router"
@@ -10,6 +11,7 @@ from .db.session import Base, engine
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+handler = Mangum(app)
 
 origins = [
     "http://localhost:5173", # Add production frontend when available
