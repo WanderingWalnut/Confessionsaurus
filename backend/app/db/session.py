@@ -8,7 +8,13 @@ import os
 # NEON_TECH_DB_URL = os.getenv("NEON_TECH_DB_URL")  # Commented out for Lambda
 NEON_TECH_DB_URL = os.environ['NEON_TECH_DB_URL']  # Lambda-compatible
 
-engine = create_engine(NEON_TECH_DB_URL)
+engine = create_engine(
+    NEON_TECH_DB_URL,            # keep using psycopg2/psycopg
+    pool_pre_ping=True,          # “SELECT 1” before giving a conn
+    pool_recycle=300,            # drop anything >5 min old
+    pool_size=5,                 # tiny pool for Lambda
+    max_overflow=0,              # don’t create unpooled extras
+)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
