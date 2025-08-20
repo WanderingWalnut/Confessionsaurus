@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -9,6 +9,36 @@ const ConfessionForm: React.FC = () => {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const titleContainerRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLDivElement | null>(null);
+  const [titleScale, setTitleScale] = useState(1);
+
+  useEffect(() => {
+    const updateScale = () => {
+      const containerWidth = titleContainerRef.current?.clientWidth ?? 0;
+      const titleWidth = titleRef.current?.scrollWidth ?? 0;
+      if (containerWidth > 0 && titleWidth > 0) {
+        const scale = Math.min(1, (containerWidth - 8) / titleWidth);
+        setTitleScale(scale);
+      } else {
+        setTitleScale(1);
+      }
+    };
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(updateScale);
+      if (titleContainerRef.current) ro.observe(titleContainerRef.current);
+      if (titleRef.current) ro.observe(titleRef.current);
+    }
+    window.addEventListener("resize", updateScale);
+    updateScale();
+
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener("resize", updateScale);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,36 +102,49 @@ const ConfessionForm: React.FC = () => {
         },
       }}
     >
-      <Typography
-        variant="h5"
-        align="center"
-        fontWeight={700}
-        mb={{ xs: 2, sm: 3 }}
+      <Box
+        ref={titleContainerRef}
         sx={{
-          color: "#dc2626",
-          fontFamily: "Comic Sans MS, cursive",
-          textShadow: "2px 2px 4px rgba(220, 38, 38, 0.2)",
-          fontSize: { xs: "1rem", sm: "1.25rem", md: "1.75rem" },
-          letterSpacing: "0.5px",
-          position: "relative",
-          lineHeight: 1.3,
-          wordWrap: "break-word",
-          overflowWrap: "break-word",
-          "&::after": {
-            content: '""',
-            position: "absolute",
-            bottom: "-8px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: { xs: "30px", sm: "40px", md: "60px" },
-            height: "3px",
-            background: "linear-gradient(90deg, #dc2626, #fca5a5, #dc2626)",
-            borderRadius: "2px",
-          },
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          overflow: "hidden",
         }}
       >
-        🦕 Share Your Prehistoric Secret! 🦖
-      </Typography>
+        <Typography
+          ref={titleRef}
+          variant="h5"
+          align="center"
+          fontWeight={700}
+          mb={{ xs: 2, sm: 3 }}
+          sx={{
+            color: "#dc2626",
+            fontFamily: "Comic Sans MS, cursive",
+            textShadow: "2px 2px 4px rgba(220, 38, 38, 0.2)",
+            fontSize: { xs: "1.1rem", sm: "1.25rem", md: "1.75rem" },
+            letterSpacing: "0.5px",
+            position: "relative",
+            lineHeight: 1.2,
+            whiteSpace: "nowrap",
+            display: "inline-block",
+            transform: `scale(${titleScale})`,
+            transformOrigin: "center",
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              bottom: "-8px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: { xs: "28px", sm: "40px", md: "60px" },
+              height: "3px",
+              background: "linear-gradient(90deg, #dc2626, #fca5a5, #dc2626)",
+              borderRadius: "2px",
+            },
+          }}
+        >
+          🦕 Share Your Prehistoric Secret! 🦖
+        </Typography>
+      </Box>
 
       <TextField
         id="content"
