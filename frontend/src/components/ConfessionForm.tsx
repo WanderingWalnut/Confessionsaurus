@@ -34,18 +34,23 @@ const ConfessionForm: React.FC = () => {
       component="form"
       onSubmit={handleSubmit}
       sx={{
-        maxWidth: 520,
+        width: { xs: "82%", sm: "100%" },
+        maxWidth: { xs: "82%", sm: 480, md: 520 },
         mx: "auto",
+        alignSelf: "center",
+        boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
-        gap: 4,
-        mt: 2,
+        gap: { xs: 3, sm: 4 },
+        mt: { xs: 1, sm: 2 },
         backgroundColor: "rgba(255, 255, 255, 0.95)",
         backdropFilter: "blur(10px)",
-        borderRadius: 4,
-        padding: 5,
-        boxShadow:
-          "0 20px 60px rgba(220, 38, 38, 0.15), 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)",
+        borderRadius: { xs: 2, sm: 3, md: 4 },
+        padding: { xs: 2.5, sm: 4, md: 5 },
+        boxShadow: {
+          xs: "0 10px 24px rgba(220, 38, 38, 0.15), 0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8)",
+          sm: "0 20px 60px rgba(220, 38, 38, 0.15), 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)",
+        },
         border: "2px solid rgba(254, 202, 202, 0.6)",
         position: "relative",
         overflow: "hidden",
@@ -61,7 +66,7 @@ const ConfessionForm: React.FC = () => {
         },
         transition: "all 0.3s ease-in-out",
         "&:hover": {
-          transform: "translateY(-4px)",
+          transform: { xs: "none", sm: "translateY(-4px)" },
           boxShadow:
             "0 25px 70px rgba(220, 38, 38, 0.2), 0 12px 40px rgba(0, 0, 0, 0.15)",
         },
@@ -71,21 +76,24 @@ const ConfessionForm: React.FC = () => {
         variant="h5"
         align="center"
         fontWeight={700}
-        mb={3}
+        mb={{ xs: 2, sm: 3 }}
         sx={{
           color: "#dc2626",
           fontFamily: "Comic Sans MS, cursive",
           textShadow: "2px 2px 4px rgba(220, 38, 38, 0.2)",
-          fontSize: "1.75rem",
+          fontSize: { xs: "1rem", sm: "1.25rem", md: "1.75rem" },
           letterSpacing: "0.5px",
           position: "relative",
+          lineHeight: 1.3,
+          wordWrap: "break-word",
+          overflowWrap: "break-word",
           "&::after": {
             content: '""',
             position: "absolute",
             bottom: "-8px",
             left: "50%",
             transform: "translateX(-50%)",
-            width: "60px",
+            width: { xs: "30px", sm: "40px", md: "60px" },
             height: "3px",
             background: "linear-gradient(90deg, #dc2626, #fca5a5, #dc2626)",
             borderRadius: "2px",
@@ -103,7 +111,7 @@ const ConfessionForm: React.FC = () => {
         onChange={(e) => setContent(e.target.value)}
         required
         multiline
-        minRows={8}
+        minRows={6}
         variant="outlined"
         fullWidth
         InputProps={{
@@ -111,8 +119,8 @@ const ConfessionForm: React.FC = () => {
             backgroundColor: "rgba(254, 242, 242, 0.8)",
             color: "#991b1b",
             borderColor: "#fecaca",
-            borderRadius: 3,
-            fontSize: "16px",
+            borderRadius: { xs: 2, sm: 3 },
+            fontSize: { xs: "14px", sm: "15px", md: "16px" },
             lineHeight: 1.6,
             "& fieldset": {
               borderColor: "#fecaca",
@@ -125,7 +133,7 @@ const ConfessionForm: React.FC = () => {
             },
             "&:hover": {
               backgroundColor: "rgba(254, 242, 242, 0.9)",
-              transform: "translateY(-1px)",
+              transform: { xs: "none", sm: "translateY(-1px)" },
               boxShadow: "0 4px 12px rgba(220, 38, 38, 0.1)",
             },
             "&.Mui-focused fieldset": {
@@ -135,8 +143,8 @@ const ConfessionForm: React.FC = () => {
             },
             "& .MuiInputBase-input": {
               fontFamily: "Comic Sans MS, cursive",
-              fontSize: "16px",
-              padding: "16px",
+              fontSize: { xs: "14px", sm: "15px", md: "16px" },
+              padding: { xs: "12px", sm: "14px", md: "16px" },
               "&::placeholder": {
                 color: "#dc2626",
                 opacity: 0.7,
@@ -149,7 +157,7 @@ const ConfessionForm: React.FC = () => {
             color: "#dc2626",
             fontFamily: "Comic Sans MS, cursive",
             fontWeight: 600,
-            fontSize: "16px",
+            fontSize: { xs: "14px", sm: "15px", md: "16px" },
             "&.Mui-focused": {
               color: "#dc2626",
             },
@@ -160,8 +168,9 @@ const ConfessionForm: React.FC = () => {
             fontFamily: "Comic Sans MS, cursive",
             color: "#dc2626",
             opacity: 0.8,
-            fontSize: "14px",
+            fontSize: { xs: "12px", sm: "13px", md: "14px" },
             marginLeft: 0,
+            textAlign: { xs: "center", sm: "left" },
           },
         }}
         helperText="Your confession will be posted anonymously on Instagram"
@@ -172,8 +181,8 @@ const ConfessionForm: React.FC = () => {
           sx={{
             backgroundColor: "rgba(254, 226, 226, 0.8)",
             border: "2px solid #fca5a5",
-            borderRadius: 3,
-            padding: 2,
+            borderRadius: { xs: 2, sm: 3 },
+            padding: { xs: 1.5, sm: 2 },
             textAlign: "center",
           }}
         >
@@ -182,7 +191,8 @@ const ConfessionForm: React.FC = () => {
             sx={{
               fontFamily: "Comic Sans MS, cursive",
               fontWeight: 600,
-              fontSize: "16px",
+              fontSize: { xs: "14px", sm: "15px", md: "16px" },
+              lineHeight: 1.4,
             }}
           >
             🦕 Oops! {error} 🦖
@@ -201,15 +211,16 @@ const ConfessionForm: React.FC = () => {
           background: "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)",
           color: "#fff",
           fontFamily: "Comic Sans MS, cursive",
-          fontSize: "18px",
-          borderRadius: 3,
-          padding: "16px 32px",
+          fontSize: { xs: "16px", sm: "17px", md: "18px" },
+          borderRadius: { xs: 2, sm: 3 },
+          padding: { xs: "12px 24px", sm: "14px 28px", md: "16px 32px" },
           boxShadow:
             "0 8px 24px rgba(220, 38, 38, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1)",
           border: "2px solid rgba(254, 202, 202, 0.6)",
           position: "relative",
           overflow: "hidden",
           transition: "all 0.3s ease-in-out",
+          minHeight: { xs: "48px", sm: "52px", md: "56px" },
           "&::before": {
             content: '""',
             position: "absolute",
@@ -225,13 +236,13 @@ const ConfessionForm: React.FC = () => {
             background: "linear-gradient(135deg, #b91c1c 0%, #991b1b 100%)",
             boxShadow:
               "0 12px 32px rgba(220, 38, 38, 0.4), 0 6px 16px rgba(0, 0, 0, 0.15)",
-            transform: "translateY(-2px)",
+            transform: { xs: "none", sm: "translateY(-2px)" },
             "&::before": {
               left: "100%",
             },
           },
           "&:active": {
-            transform: "translateY(0px)",
+            transform: { xs: "none", sm: "translateY(0px)" },
             boxShadow: "0 4px 16px rgba(220, 38, 38, 0.3)",
           },
           "&:disabled": {
