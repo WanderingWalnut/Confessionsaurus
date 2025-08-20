@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { submitConfession } from "../services/api";
 
 const ConfessionForm: React.FC = () => {
   const [content, setContent] = useState("");
@@ -15,21 +16,7 @@ const ConfessionForm: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/confess/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: content,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await submitConfession(content);
       console.log("Response: ", data);
 
       // Only reset form on success

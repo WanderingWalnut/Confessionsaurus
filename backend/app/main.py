@@ -14,9 +14,8 @@ app = FastAPI()
 handler = Mangum(app)
 
 origins = [
-    "http://localhost:5173", # Add production frontend when available
-    "http://confessionsaurus.s3-website.us-east-2.amazonaws.com", # S3 bucket link
-    "https://confessionsaurus.com" # Deployed AWS amplify link
+    "http://localhost:5173", # Local development
+    "https://confessionsaurus.com" # Production frontend
 ]
 
 # Add CORS middleware
