@@ -28,8 +28,8 @@ def render_batch_images():
             
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
                 # Pass confession content (string) as input, not the entire confession object
-                render_confession_on_image(confession.content, output_path=tmp.name)
-                temp_files.append(tmp.name) # Store the file path for posting
+                output_path = render_confession_on_image(confession.content)
+                temp_files.append(output_path) # Store the file path for posting
             
             update_confession_to_posted(db, confession.id) # Update to posted so it doesn't keep getting re-posted
         
