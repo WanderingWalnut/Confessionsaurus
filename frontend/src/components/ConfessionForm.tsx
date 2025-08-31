@@ -119,7 +119,7 @@ const ConfessionForm: React.FC = () => {
           mb={{ xs: 2, sm: 3 }}
           sx={{
             color: "#dc2626",
-            fontFamily: "Comic Sans MS, cursive",
+            fontFamily: "'Comic Neue', 'Comic Sans MS', cursive",
             textShadow: "2px 2px 4px rgba(220, 38, 38, 0.2)",
             fontSize: { xs: "1.1rem", sm: "1.25rem", md: "1.75rem" },
             letterSpacing: "0.5px",
@@ -185,7 +185,7 @@ const ConfessionForm: React.FC = () => {
               boxShadow: "0 0 0 4px rgba(220, 38, 38, 0.1)",
             },
             "& .MuiInputBase-input": {
-              fontFamily: "Comic Sans MS, cursive",
+              fontFamily: "'Comic Neue', 'Comic Sans MS', cursive",
               fontSize: { xs: "14px", sm: "15px", md: "16px" },
               padding: { xs: "12px", sm: "14px", md: "16px" },
               "&::placeholder": {
@@ -198,7 +198,7 @@ const ConfessionForm: React.FC = () => {
         InputLabelProps={{
           sx: {
             color: "#dc2626",
-            fontFamily: "Comic Sans MS, cursive",
+            fontFamily: "'Comic Neue', 'Comic Sans MS', cursive",
             fontWeight: 600,
             fontSize: { xs: "14px", sm: "15px", md: "16px" },
             "&.Mui-focused": {
@@ -208,7 +208,7 @@ const ConfessionForm: React.FC = () => {
         }}
         FormHelperTextProps={{
           sx: {
-            fontFamily: "Comic Sans MS, cursive",
+            fontFamily: "'Comic Neue', 'Comic Sans MS', cursive",
             color: "#dc2626",
             opacity: 0.8,
             fontSize: { xs: "12px", sm: "13px", md: "14px" },
@@ -232,7 +232,7 @@ const ConfessionForm: React.FC = () => {
           <Typography
             color="error"
             sx={{
-              fontFamily: "Comic Sans MS, cursive",
+              fontFamily: "'Comic Neue', 'Comic Sans MS', cursive",
               fontWeight: 600,
               fontSize: { xs: "14px", sm: "15px", md: "16px" },
               lineHeight: 1.4,
@@ -253,7 +253,7 @@ const ConfessionForm: React.FC = () => {
           backgroundColor: "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)",
           background: "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)",
           color: "#fff",
-          fontFamily: "Comic Sans MS, cursive",
+          fontFamily: "'Comic Neue', 'Comic Sans MS', cursive",
           fontSize: { xs: "16px", sm: "17px", md: "18px" },
           borderRadius: { xs: 2, sm: 3 },
           padding: { xs: "12px 24px", sm: "14px 28px", md: "16px 32px" },
