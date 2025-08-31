@@ -15,8 +15,8 @@ handler = Mangum(app)
 
 origins = [
     "http://localhost:5173", # Local development
-    "https://confessionsaurus.com" # Production frontend
-    "https://www.confessionsaurus.com/" # Alternative link/subdomain
+    "https://confessionsaurus.com", # Production frontend
+    "https://www.confessionsaurus.com" # Alternative link/subdomain
 ]
 
 # Add CORS middleware
