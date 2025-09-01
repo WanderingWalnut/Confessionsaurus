@@ -1,6 +1,8 @@
 import os
 import time
 import textwrap
+import uuid
+from typing import Optional
 from PIL import Image, ImageDraw, ImageFont
 
 # If your handler lives in lambda_package/app/main.py, then:
@@ -12,7 +14,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def render_confession_on_image(
     confession_text: str,
     bg_filename: str   = "Background.jpg",
-    font_filename: str = "Fredoka-Regular.ttf"
+    font_filename: str = "Fredoka-Regular.ttf",
+    output_path: Optional[str] = None,
 ) -> str:
     """
     Expects on-disk layout under /var/task/ (the Lambda bundle root):
@@ -26,9 +29,11 @@ def render_confession_on_image(
         bg_path   = os.path.join(BASE_DIR, "assets",         bg_filename)
         font_path = os.path.join(BASE_DIR, "assets", "fonts", font_filename)
 
-        # Lambda only lets you write under /tmp
-        ts = int(time.time())
-        output_path = os.path.join("/tmp", f"confession_{ts}.jpg")
+        # Lambda only lets you write under /tmp. Ensure filename uniqueness.
+        if not output_path:
+            millis = int(time.time() * 1000)
+            unique = uuid.uuid4().hex
+            output_path = os.path.join("/tmp", f"confession_{millis}_{unique}.jpg")
 
         # Pillow logic
         img  = Image.open(bg_path).convert("RGB")

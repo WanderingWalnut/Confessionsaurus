@@ -21,17 +21,15 @@ def render_batch_images():
 
         if not confessions:
             print(f"No confessions available")
-            return []
+            return [], []
 
         for confession in confessions:
             confession_text.append(confession.content)
-            
-            with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
-                # Pass confession content (string) as input, not the entire confession object
-                output_path = render_confession_on_image(confession.content)
-                temp_files.append(output_path) # Store the file path for posting
-            
-            update_confession_to_posted(db, confession.id) # Update to posted so it doesn't keep getting re-posted
+            # Deterministic order: generate one unique file per confession
+            output_path = render_confession_on_image(confession.content)
+            temp_files.append(output_path)
+            # Mark as posted only after image successfully rendered
+            update_confession_to_posted(db, confession.id)
         
         # Return the list of temp files to be processed for posting
         print(f'Render successful! Here are the list of temp files: {temp_files}')
