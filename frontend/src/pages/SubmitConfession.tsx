@@ -46,8 +46,8 @@ const SubmitConfession: React.FC = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              width="12"
-              height="12"
+              width="20"
+              height="20"
               style={{
                 verticalAlign: "middle",
                 display: "inline-block",
