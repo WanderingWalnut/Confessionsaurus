@@ -33,7 +33,7 @@ const SubmitConfession: React.FC = () => {
           <ConfessionForm />
         </div>
         {/* Instagram link below the form (compact) */}
-        <div className="mt-4 flex items-center justify-center">
+        <div className="flex items-center justify-center" style={{ marginTop: 20 }}>
           <a
             href="https://www.instagram.com/confessionsaurus/"
             target="_blank"
